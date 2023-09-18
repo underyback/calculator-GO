@@ -73,12 +73,18 @@ func mult(a number, b number) {
 	}
 }
 func div(a number, b number) {
-	c := a.Number / b.Number
-	fmt.Print("Результат деления: ")
-	if a.IfArabic {
-		fmt.Println(c)
+
+	if a.IfArabic == false && a.Number <= b.Number {
+		fmt.Println("Результат выходит за границы римской системы счисления")
 	} else {
-		fmt.Println(ArabToRome(c))
+		c := a.Number / b.Number
+		fmt.Print("Результат деления: ")
+
+		if a.IfArabic {
+			fmt.Println(c)
+		} else {
+			fmt.Println(ArabToRome(c))
+		}
 	}
 }
 
@@ -107,13 +113,16 @@ func main() {
 		"IX":   {9, false},
 		"X":    {10, false},
 	}
-	fmt.Print("Введите операцию ")
+	fmt.Print("Введите операцию: ")
 	fmt.Scan(&a, &s, &b)
+
 	value, ok := IntMap[a]
 	if ok {
 		ai = value
 	} else {
 		fmt.Println("Введенно число вне допустимого диапазона")
+		fmt.Print("Введите любой символ чтобы выйти из программы ")
+		fmt.Scan(&a)
 		return
 	}
 	value, ok = IntMap[b]
@@ -121,6 +130,8 @@ func main() {
 		bi = value
 	} else {
 		fmt.Println("Введенно число вне допустимого диапазона")
+		fmt.Print("Введите любой символ чтобы выйти из программы ")
+		fmt.Scan(&a)
 		return
 	}
 
@@ -139,7 +150,6 @@ func main() {
 		div(ai, bi)
 	default:
 		fmt.Println("Введен неверный оператор")
-		return
 	}
 	fmt.Print("Введите любой символ чтобы выйти из программы ")
 	fmt.Scan(&a)
