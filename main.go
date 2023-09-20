@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -54,9 +55,10 @@ func add(a number, b number) {
 	}
 
 }
-func sub(a number, b number) {
+func sub(a number, b number) error {
 	if a.IfArabic == false && a.Number <= b.Number {
-		fmt.Println("Результат выходит за границы римской системы счисления")
+		err := errors.New("результат выходит за границы римской системы счисления")
+		return err
 	} else {
 		c := a.Number - b.Number
 		fmt.Print("Результат вычитания: ")
@@ -66,6 +68,7 @@ func sub(a number, b number) {
 			fmt.Println(ArabToRome(c))
 		}
 	}
+	return nil
 }
 func mult(a number, b number) {
 	c := a.Number * b.Number
@@ -76,10 +79,11 @@ func mult(a number, b number) {
 		fmt.Println(ArabToRome(c))
 	}
 }
-func div(a number, b number) {
+func div(a number, b number) error {
 
 	if a.IfArabic == false && a.Number <= b.Number {
-		fmt.Println("Результат выходит за границы римской системы счисления")
+		err := errors.New("результат выходит за границы римской системы счисления")
+		return err
 	} else {
 		c := a.Number / b.Number
 		fmt.Print("Результат деления: ")
@@ -90,6 +94,7 @@ func div(a number, b number) {
 			fmt.Println(ArabToRome(c))
 		}
 	}
+	return nil
 }
 
 func main() {
@@ -127,46 +132,49 @@ func main() {
 	data := strings.Fields(line)
 
 	if len(data) > 3 {
-		fmt.Println("Ошибка ввода")
-		fmt.Print("Введите любой символ чтобы выйти из программы ")
-		fmt.Scan(&a)
-		return
+		err := errors.New("превышено количество операций")
+		fmt.Print(err)
+		log.Fatal(err)
 	}
 
 	value, ok := IntMap[data[0]]
 	if ok {
 		ai = value
 	} else {
-		fmt.Println("Введенно число вне допустимого диапазона")
-		fmt.Print("Введите любой символ чтобы выйти из программы ")
-		fmt.Scan(&a)
-		return
+		err := errors.New("введенно число вне допустимого диапазона")
+		log.Fatal(err)
 	}
 	value, ok = IntMap[data[2]]
 	if ok {
 		bi = value
 	} else {
-		fmt.Println("Введенно число вне допустимого диапазона")
-		fmt.Print("Введите любой символ чтобы выйти из программы ")
-		fmt.Scan(&a)
-		return
+		err := errors.New("введенно число вне допустимого диапазона")
+		log.Fatal(err)
 	}
 
 	if ai.IfArabic != bi.IfArabic {
-		fmt.Println("Числа из разных систем счисления")
+		err := errors.New("числа из разных систем счисления")
+		log.Fatal(err)
 	}
 
 	switch data[1] {
 	case "+":
 		add(ai, bi)
 	case "-":
-		sub(ai, bi)
+		err = sub(ai, bi)
+		if err != nil {
+			log.Fatal(err)
+		}
 	case "*":
 		mult(ai, bi)
 	case "/":
-		div(ai, bi)
+		err = div(ai, bi)
+		if err != nil {
+			log.Fatal(err)
+		}
 	default:
-		fmt.Println("Введен неверный оператор")
+		err := errors.New("введен неверный оператор")
+		log.Fatal(err)
 	}
 	fmt.Print("Введите любой символ чтобы выйти из программы ")
 	fmt.Scan(&a)
