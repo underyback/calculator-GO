@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 )
 
 type number struct {
@@ -89,7 +93,7 @@ func div(a number, b number) {
 }
 
 func main() {
-	var a, b, s string
+	var a int
 	var ai, bi number
 	IntMap := map[string]number{
 		"1":    {1, true},
@@ -113,10 +117,23 @@ func main() {
 		"IX":   {9, false},
 		"X":    {10, false},
 	}
-	fmt.Print("Введите операцию: ")
-	fmt.Scan(&a, &s, &b)
+	fmt.Print("Введите операцию ")
+	reader := bufio.NewReader(os.Stdin)
+	line, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
+	line = strings.ToUpper(line)
+	data := strings.Fields(line)
 
-	value, ok := IntMap[a]
+	if len(data) > 3 {
+		fmt.Println("Ошибка ввода")
+		fmt.Print("Введите любой символ чтобы выйти из программы ")
+		fmt.Scan(&a)
+		return
+	}
+
+	value, ok := IntMap[data[0]]
 	if ok {
 		ai = value
 	} else {
@@ -125,7 +142,7 @@ func main() {
 		fmt.Scan(&a)
 		return
 	}
-	value, ok = IntMap[b]
+	value, ok = IntMap[data[2]]
 	if ok {
 		bi = value
 	} else {
@@ -139,7 +156,7 @@ func main() {
 		fmt.Println("Числа из разных систем счисления")
 	}
 
-	switch s {
+	switch data[1] {
 	case "+":
 		add(ai, bi)
 	case "-":
